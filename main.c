@@ -2,96 +2,82 @@
 #include <stdlib.h>
 #include <string.h>
 
-// struct Point {
-//     float x;
-//     float y;
-// };
-
-// struct Circle {
-//     struct Point xy;
-//     float rad;
-// } typedef Circle;
-
-// struct Triangle {
-//     struct Point xy1;
-//     struct Point xy2;
-//     struct Point xy3;
-//     struct Point xy4;
-// } typedef Triangle;
-
-// int number(int y)
-// {
-//     int x = y - 48;
-//     return x;
-// }
-
 int main()
 {
+    double x, y, r;
+    char *num = malloc(4 * sizeof(char)), *figure = malloc(4 * sizeof(char)),
+         *str = malloc(4 * sizeof(char));
+    char *cor1 = malloc(4 * sizeof(char)), *cor2 = malloc(4 * sizeof(char)),
+         *rad = malloc(4 * sizeof(char));
+    int i = 0, nof = 0, e = 0, f = 0;
+    char cir[] = {"circle"};
+
     FILE* file = fopen("output.txt", "r");
-    int a = 0, b = 0;
-    int i = 0, j = 0, f = 0, k = 0, N = 100, number_of_figures;
-    char *str = NULL, cir[] = {"circle"}, tri[] = {"triangle"}, numbers[N];
 
-    printf("Enter the number figures : ");
-    scanf("%d", &number_of_figures);
+    printf("Enter the number of figures:");
+    scanf("%d", &nof);
 
-    for (i = 0; i < number_of_figures; i++) {
-        str = malloc(N * sizeof(char));
+    for (; e < nof; e++) {
         fgets(str, 100, file);
+        if (strstr(str, cir) != NULL || strstr(figure, cir) != NULL) {
+            if (strcmp(figure, cir) != 0) {
+                strcpy(figure, "");
+                i = 0;
+            }
+            while (str[i] != '\0') {
+                if (strcmp(figure, cir) == 0)
+                    f = i;
+                if ((str[i] >= 65 && str[i] <= 90)
+                    || (str[i] >= 97 && str[i] <= 122))
 
-        if (strstr(str, cir) != NULL) {
-            for (int p = 0; p < N; p++) {
-                if (str[p] == 41) {
+                    strncat(figure, &str[i], 1);
+                else
                     break;
+                i++;
+            };
+
+            while (str[i] != ')') {
+                if (str[i] == '-')
+                    strncat(num, &str[i], 1);
+                if ((str[i] >= 48 && str[i] <= 57) || str[i] == '.')
+                    strncat(num, &str[i], 1);
+                i++;
+                if (str[i] == ' ' && str[i - 1] != ',') {
+                    strcpy(cor1, num);
+                    strcpy(num, "");
+                    x = atof(cor1);
                 }
-                if ((str[p] >= 48 && str[p] <= 57) || str[p] == 44
-                    || str[p] == 46 || str[p] == 32 || str[p] == 45) {
-                    k++;
-                    numbers[k] = str[p];
-                    if (a == 0) {
-                        printf("circle(");
-                        a++;
-                    }
-                    printf("%c", numbers[k]);
+                if (str[i] == ',') {
+                    strcpy(cor2, num);
+                    strcpy(num, "");
+                    y = atof(cor2);
                 }
-            }
-            a = 0;
-            if (b == 0) {
-                printf(")");
-                b++;
-            }
-            printf("\n");
-            b = 0;
-        } else if (strstr(str, tri) != NULL) {
-            for (int p = 0; p < N - 1; p++) {
-                if (str[p] == 41) {
-                    break;
-                }
-                if ((str[p] >= 48 && str[p] <= 57) || str[p] == 44
-                    || str[p] == 46 || str[p] == 32 || str[p] == 45) {
-                    k++;
-                    numbers[k] = str[p];
-                    if (a == 0) {
-                        printf("triangle((");
-                        a++;
-                    }
-                    printf("%c", numbers[k]);
+                if (str[i] == ')') {
+                    strcpy(rad, num);
+                    strcpy(num, "");
+                    r = atof(rad);
                 }
             }
-            a = 0;
-            if (b == 0) {
-                printf("))");
-                b++;
-            }
-            printf("\n");
-            b = 0;
+            if (r <= 0)
+                printf("Error! Incorrect radius. Please, try again\n");
+            else if (strcmp(figure, cir) > 0) {
+                printf("Error! Incorrent name of figure. Please try "
+                       "again\n");
+            } else if (strcmp(figure, cir) < 0) {
+                printf("Error! Incorrent name of figure. Please try "
+                       "again\n");
+                strcpy(figure, "circle");
+            } else
+                printf("%s(%.3f %.3f, %.3f)\n", figure, x, y, r);
+            i = f;
         }
     }
-
-    printf("\n");
-    free(str);
-
     fclose(file);
 
-    return 0;
+    free(str);
+    free(num);
+    free(cor1);
+    free(cor2);
+    free(rad);
+    free(figure);
 }
