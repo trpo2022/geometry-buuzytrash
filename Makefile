@@ -1,25 +1,39 @@
 TARGET = bin/main
 CC = gcc
-CFLAGS = -I src/ -Wall -Wextra -Werror -O0 -g
+CFLAGS = -I src/ -I thirdparty/ -Wall -Wextra -Werror -O0 -g
 CPPFLAGS = -MMD
 .PHONY : clean
+.PHONY : test
 
-$(TARGET) : ./obj/src/geom/*.o ./obj/src/libgeom/*.a
+$(TARGET) : ./obj/src/geom/geom.o ./obj/src/libgeom/libgeom.a
 	$(CC) $(CFLAGS) -o $@ $^ -lm
 
-./obj/src/geom/*.o : ./src/geom/main.c
+./obj/src/geom/geom.o : ./src/geom/main.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
-./obj/src/libgeom/*.a : ./obj/src/libgeom/*.o 
+./obj/src/libgeom/libgeom.a : ./obj/src/libgeom/libgeom.o 
 	ar rcs $@ $^
 
-./obj/src/libgeom/*.o : ./src/libgeom/geom.c
+./obj/src/libgeom/libgeom.o : ./src/libgeom/geom.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
 run :
 	bin/main
 
 clean :
-	rm ./obj/src/geom/*.d ./obj/src/geom/*.o ./obj/src/libgeom/*.d ./obj/src/libgeom/*.a ./obj/src/libgeom/*.o $(TARGET)
+	rm ./obj/src/geom/geom.d ./obj/src/geom/geom.o ./obj/src/libgeom/libgeom.d ./obj/src/libgeom/libgeom.a ./obj/src/libgeom/libgeom.o ./obj/test/geom_test.o ./obj/test/main_test.o ./obj/test/geom_test.d ./obj/test/main_test.d ./bin/test $(TARGET)
 
--include main.d geometry.d
+test : ./obj/src/libgeom/libgeom.a ./obj/test/geom_test.o ./obj/test/main_test.o
+	$(CC) $(CFLAGS) -o ./bin/test $^ -lm
+
+run_test : 
+	./bin/test
+
+./obj/test/geom_test.o : ./test/geom_test.c
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+
+./obj/test/main_test.o : ./test/main.c
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+
+
+-include main.d geom.d
