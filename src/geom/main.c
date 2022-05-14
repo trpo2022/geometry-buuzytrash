@@ -46,14 +46,18 @@ int main()
         if (circle[e - 1].error == 0) {
             printf("%d) ", e);
             printf("%s(%.3f %.3f, %.3f)\nPerimeter: %.3f\nArea: %.3f\n "
-                   "Intersects:\n   %s\n",
+                   "Intersects:\n   ",
                    figure,
                    circle[e - 1].p.x,
                    circle[e - 1].p.y,
                    circle[e - 1].r,
                    circle[e - 1].per,
-                   circle[e - 1].s,
-                   circle[e - 1].intersection);
+                   circle[e - 1].s);
+            for (long unsigned int i = 0; i < sizeof(circle[e - 1].intersection)
+                         / sizeof(circle[e - 1].intersection[0]);
+                 i++)
+                printf("%d ", circle[e - 1].intersection[i]);
+            putchar('\n');
         }
     }
 

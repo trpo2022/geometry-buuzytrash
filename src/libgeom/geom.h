@@ -16,7 +16,7 @@ typedef struct {
     double per;
     double s;
     int error;
-    char intersection[];
+    int intersection[2];
 } krug;
 
 char* get_fig(char* str, char* figure);

@@ -91,18 +91,23 @@ double area(krug* circle)
 
 int intersection_fig(krug* circle, int nof)
 {
-    int i, j;
-    for (i = 0; i < nof; i++)
+    int i, j, n;
+    for (i = 0; i < nof; i++) {
+        n = 0;
         for (j = nof - 1; j > -1; j--) {
             if (circle[i].error == 0 && circle[j].error == 0)
                 if (fabs(circle[i].p.x - circle[j].p.x)
                     <= (circle[i].r + circle[j].r)) {
                     if (fabs(circle[i].p.y - circle[j].p.y)
                         <= (circle[i].r + circle[j].r)) {
-                        printf("%d %d\n", i, j);
-                        sprintf(circle[i].intersection, "%.3d ", j + 1);
+                        if (i != j) {
+                            circle[i].intersection[n] = j + 1;
+                            n++;
+                        }
                     }
                 }
         }
+    }
+
     return 0;
 }
