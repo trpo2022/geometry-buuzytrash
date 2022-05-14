@@ -50,3 +50,17 @@ CTEST(getnumbers, test_2)
     ASSERT_DBL_NEAR(circle.r, rad);
     ASSERT_EQUAL(circle.error, error);
 }
+
+CTEST(area, test)
+{
+    krug circle;
+    circle.p.x = 1;
+    circle.p.y = 2;
+    circle.r = 3;
+
+    float s = 28.27433;
+
+    circle.s = area(&circle);
+    printf("%.5f %.5f\n", s, circle.s);
+    ASSERT_DBL_NEAR(circle.s, s);
+}
