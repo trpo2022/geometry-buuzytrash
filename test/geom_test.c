@@ -76,3 +76,45 @@ CTEST(perimeter, test)
 
     ASSERT_DBL_NEAR(circle.per, p);
 }
+
+CTEST(intersection, test_1)
+{
+    krug circle[2];
+
+    circle[0].p.x = 3;
+    circle[0].p.y = 3;
+    circle[0].r = 5;
+    circle[0].error = 0;
+
+    circle[1].p.x = 5;
+    circle[1].p.y = 5;
+    circle[1].r = 4;
+    circle[1].error = 0;
+
+    intersection_fig(&circle[0], 2);
+
+    ASSERT_EQUAL(circle[0].intersection[0], 2);
+    ASSERT_EQUAL(circle[1].intersection[0], 1);
+}
+
+CTEST(intersection, test_2)
+{
+    krug circle[2];
+
+    circle[0].p.x = 3;
+    circle[0].p.y = 3;
+    circle[0].r = 3;
+    circle[0].error = 0;
+    circle[0].intersection[0] = 0;
+
+    circle[1].p.x = 10;
+    circle[1].p.y = 6;
+    circle[1].r = 2;
+    circle[1].error = 0;
+    circle[1].intersection[0] = 0;
+
+    intersection_fig(&circle[0], 2);
+
+    ASSERT_EQUAL(circle[0].intersection[0], 0);
+    ASSERT_EQUAL(circle[1].intersection[0], 0);
+}
